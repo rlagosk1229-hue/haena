@@ -25,7 +25,14 @@ export default function CalendarPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newTime, setNewTime] = useState("");
   const [newMemo, setNewMemo] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id ?? null);
+    });
+  }, [supabase]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -66,12 +73,13 @@ export default function CalendarPage() {
   const selectedEvents = eventsForDate(selectedDate);
 
   const addEvent = async () => {
-    if (!newTitle.trim()) return;
+    if (!newTitle.trim() || !userId) return;
     const { error } = await supabase.from("events").insert({
       title: newTitle.trim(),
       date: selectedDate,
       start_time: newTime || null,
       memo: newMemo,
+      user_id: userId,
     });
     if (error) {
       toast.error("추가 실패");

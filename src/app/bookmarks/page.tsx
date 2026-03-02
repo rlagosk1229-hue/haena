@@ -24,7 +24,14 @@ export default function BookmarksPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("기타");
   const [newDesc, setNewDesc] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id ?? null);
+    });
+  }, [supabase]);
 
   const loadBookmarks = useCallback(async () => {
     let query = supabase.from("bookmarks").select("*").order("created_at", { ascending: false });
@@ -40,7 +47,7 @@ export default function BookmarksPage() {
   }, [loadBookmarks]);
 
   const addBookmark = async () => {
-    if (!newUrl.trim() || !newTitle.trim()) return;
+    if (!newUrl.trim() || !newTitle.trim() || !userId) return;
     const fullUrl = newUrl.startsWith("http") ? newUrl : `https://${newUrl}`;
     const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(fullUrl).hostname}&sz=32`;
     const { error } = await supabase.from("bookmarks").insert({
@@ -49,6 +56,7 @@ export default function BookmarksPage() {
       description: newDesc,
       category: newCategory,
       favicon_url: faviconUrl,
+      user_id: userId,
     });
     if (error) {
       toast.error("추가 실패");

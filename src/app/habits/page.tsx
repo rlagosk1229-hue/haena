@@ -18,7 +18,14 @@ export default function HabitsPage() {
   const [newHabit, setNewHabit] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("✅");
   const [showAdd, setShowAdd] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id ?? null);
+    });
+  }, [supabase]);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -65,10 +72,10 @@ export default function HabitsPage() {
   }, [loadData]);
 
   const addHabit = async () => {
-    if (!newHabit.trim()) return;
+    if (!newHabit.trim() || !userId) return;
     const { error } = await supabase
       .from("habits")
-      .insert({ name: newHabit.trim(), icon: selectedIcon });
+      .insert({ name: newHabit.trim(), icon: selectedIcon, user_id: userId });
     if (error) {
       toast.error("추가 실패");
       return;
@@ -86,7 +93,7 @@ export default function HabitsPage() {
     } else {
       await supabase
         .from("habit_logs")
-        .insert({ habit_id: habitId, date: today });
+        .insert({ habit_id: habitId, date: today, user_id: userId! });
     }
     loadData();
   };
