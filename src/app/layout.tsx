@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { Toaster } from "@/components/ui/sonner";
+import { BottomTabBar } from "@/components/layout/bottom-tab-bar";
 
 const sans = Noto_Sans_KR({
   subsets: ["latin"],
@@ -51,7 +52,8 @@ export default function RootLayout({
 
         <Providers>
           <Header />
-          <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">{children}</main>
+          <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-20 sm:pb-8">{children}</main>
+          <BottomTabBar />
           <Toaster />
         </Providers>
       </body>

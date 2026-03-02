@@ -271,3 +271,8 @@ ul[data-type="taskList"] li>label input[type="checkbox"]:checked::before {
 .tippy-box {
   max-width: 400px !important;
 }
+
+/* Safe area for bottom tab bar on iPhone */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
