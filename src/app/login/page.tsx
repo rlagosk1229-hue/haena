@@ -39,18 +39,20 @@ export default function LoginPage() {
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="font-serif text-2xl font-bold">로그인</h1>
+          <h1 className="font-serif text-2xl font-bold">해나의 일기장</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            글을 작성하려면 로그인하세요
+            로그인하고 글을 작성하세요
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4" autoComplete="on">
           <div className="space-y-2">
             <Label htmlFor="email">이메일</Label>
             <Input
               id="email"
+              name="email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="hello@example.com"
@@ -61,7 +63,9 @@ export default function LoginPage() {
             <Label htmlFor="password">비밀번호</Label>
             <Input
               id="password"
+              name="password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"

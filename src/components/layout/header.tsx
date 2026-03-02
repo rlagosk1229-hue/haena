@@ -16,7 +16,7 @@ export async function Header() {
           href="/"
           className="font-serif text-xl font-bold tracking-tight hover:opacity-80 transition-opacity"
         >
-          My Journal
+          해나
         </Link>
         <div className="flex items-center gap-1">
           <ThemeToggle />

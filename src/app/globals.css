@@ -180,3 +180,82 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+/* ProseMirror (Novel editor) styles */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--muted-foreground);
+  pointer-events: none;
+  height: 0;
+}
+
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--muted-foreground);
+  pointer-events: none;
+  height: 0;
+}
+
+.ProseMirror img {
+  transition: filter 0.1s ease-in-out;
+  border-radius: var(--radius);
+}
+
+.ProseMirror img:hover {
+  cursor: pointer;
+  filter: brightness(90%);
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid var(--primary);
+  filter: brightness(90%);
+}
+
+ul[data-type="taskList"] li > label input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 0.25rem;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+ul[data-type="taskList"] li > label input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+ul[data-type="taskList"] li > label input[type="checkbox"]:checked::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(1);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background: white;
+}
+
+/* Novel highlight colors */
+:root {
+  --novel-highlight-default: #ffffff;
+  --novel-highlight-purple: #f6f3f8;
+  --novel-highlight-red: #fdebeb;
+  --novel-highlight-yellow: #fbf4a2;
+  --novel-highlight-blue: #c1ecf9;
+  --novel-highlight-green: #acf79f;
+  --novel-highlight-orange: #faebdd;
+  --novel-highlight-pink: #faf1f5;
+  --novel-highlight-gray: #f1f1ef;
+}
+
+.tippy-box {
+  max-width: 400px !important;
+}

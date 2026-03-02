@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TagInput } from "./tag-input";
 import { ImageUpload } from "./image-upload";
+import { NovelEditor } from "./novel-editor";
 import { createPost, updatePost } from "@/lib/posts";
 import type { Post, PostType } from "@/types/database";
 import { toast } from "sonner";
@@ -139,15 +140,13 @@ export function PostEditor({ post }: PostEditorProps) {
         />
       </div>
 
-      {/* Content Editor - Simple textarea with nice styling */}
+      {/* Content Editor - Novel WYSIWYG */}
       <div className="space-y-2">
         <Label>내용</Label>
         <div className="glass rounded-2xl overflow-hidden">
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="여기에 글을 작성하세요..."
-            className="w-full min-h-[400px] border-0 bg-transparent shadow-none focus:outline-none resize-none p-6 text-base leading-relaxed font-sans"
+          <NovelEditor
+            initialHTML={content}
+            onChange={(html) => setContent(html)}
           />
         </div>
       </div>
