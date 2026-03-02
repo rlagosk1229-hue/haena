@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "해나의 일기장",
   },
   formatDetection: {
@@ -41,7 +41,8 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#f7f9fd" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#151722" media="(prefers-color-scheme: dark)" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />

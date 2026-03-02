@@ -272,7 +272,11 @@ ul[data-type="taskList"] li>label input[type="checkbox"]:checked::before {
   max-width: 400px !important;
 }
 
-/* Safe area for bottom tab bar on iPhone */
+/* Safe area insets for iPhone notch / Dynamic Island */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }

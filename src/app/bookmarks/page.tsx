@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 import type { Bookmark } from "@/types/database";
 
-const CATEGORIES = ["전체", "개발", "디자인", "영상", "읽을거리", "쇼핑", "기타"];
+const CATEGORIES = ["전체", "설교", "읽을거리", "쇼핑", "기타"];
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
