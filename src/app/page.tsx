@@ -25,20 +25,23 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <div className="space-y-10">
       {/* Hero */}
-      <section className="text-center py-16">
+      <section className="text-center py-20 relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/20 rounded-full blur-[3rem] -z-10 dark:bg-primary/10" />
         <BlurFade delay={0.1}>
           <TextAnimate
             as="h1"
             animation="blurInUp"
             by="word"
             once
-            className="font-serif text-5xl md:text-6xl font-bold mb-4 tracking-tight"
+            className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-foreground"
           >
             해나의 일기장
           </TextAnimate>
         </BlurFade>
         <BlurFade delay={0.3}>
-          <p className="text-muted-foreground text-lg">나의 생각과 일상을 기록하는 공간</p>
+          <p className="text-muted-foreground/80 text-base md:text-lg font-medium tracking-wide">
+            나의 생각과 작은 일상들을 조용히 기록하는 공간
+          </p>
         </BlurFade>
       </section>
 

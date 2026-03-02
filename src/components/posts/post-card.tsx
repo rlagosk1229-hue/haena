@@ -23,60 +23,61 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.08 }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: "easeOut" }}
       className={featured ? "md:col-span-2" : ""}
     >
-      <Link href={`/posts/${post.slug}`}>
-        <article className="glass rounded-2xl p-6 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group cursor-pointer">
+      <Link href={`/posts/${post.slug}`} className="block h-full group">
+        <article className="glass rounded-[2rem] p-5 sm:p-7 h-full flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:hover:shadow-[0_20px_40px_-15px_rgba(255,255,255,0.02)] cursor-pointer bg-white/40 dark:bg-black/10">
           {post.cover_image && (
-            <div className="mb-4 rounded-xl overflow-hidden">
+            <div className="mb-6 rounded-[1.5rem] overflow-hidden bg-muted/30">
               <img
                 src={post.cover_image}
                 alt={post.title}
-                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-56 sm:h-64 object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
           )}
 
-          <div className="flex items-center gap-2 mb-3">
-            <Badge
-              variant="secondary"
-              className="text-xs font-medium"
-            >
-              {post.type === "diary" ? "일기" : "노트"}
-            </Badge>
-            <span className="text-xs text-muted-foreground">
-              {format(new Date(post.created_at), "M월 d일, yyyy", {
-                locale: ko,
-              })}
-            </span>
-          </div>
-
-          <h2
-            className={`font-serif font-bold mb-2 group-hover:text-primary transition-colors ${
-              featured ? "text-2xl" : "text-lg"
-            }`}
-          >
-            {post.title}
-          </h2>
-
-          <p className="text-muted-foreground text-sm line-clamp-3">
-            {plainText.slice(0, featured ? 200 : 120)}
-            {plainText.length > (featured ? 200 : 120) ? "..." : ""}
-          </p>
-
-          {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-4">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs text-muted-foreground/70"
-                >
-                  #{tag}
-                </span>
-              ))}
+          <div className="flex flex-col flex-1">
+            <div className="flex items-center gap-2 mb-4">
+              <Badge
+                variant="secondary"
+                className="rounded-full px-3 py-0.5 text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 transition-colors"
+              >
+                {post.type === "diary" ? "일기" : "노트"}
+              </Badge>
+              <span className="text-xs text-muted-foreground/70 font-medium">
+                {format(new Date(post.created_at), "M월 d일, yyyy", {
+                  locale: ko,
+                })}
+              </span>
             </div>
-          )}
+
+            <h2
+              className={`font-serif font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300 leading-snug ${featured ? "text-3xl sm:text-4xl" : "text-xl sm:text-2xl"
+                }`}
+            >
+              {post.title}
+            </h2>
+
+            <p className="text-muted-foreground/80 text-sm sm:text-base leading-relaxed line-clamp-3 mb-6 flex-1">
+              {plainText.slice(0, featured ? 250 : 120)}
+              {plainText.length > (featured ? 250 : 120) ? "..." : ""}
+            </p>
+
+            {post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-auto">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[11px] px-2.5 py-1 rounded-full bg-secondary/50 text-secondary-foreground/70 border border-border/50"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
         </article>
       </Link>
     </motion.div>
