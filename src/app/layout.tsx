@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
@@ -17,6 +17,16 @@ const serif = Noto_Serif_KR({
   weight: ["300", "400", "700"],
   variable: "--font-serif",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f9fd" },
+    { media: "(prefers-color-scheme: dark)", color: "#151722" },
+  ],
+};
 
 export const metadata: Metadata = {
   title: "해나의 일기장",
@@ -40,11 +50,6 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <meta name="theme-color" content="#f7f9fd" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#151722" media="(prefers-color-scheme: dark)" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body className={`${sans.variable} ${serif.variable} font-sans relative min-h-screen selection:bg-primary/20`}>
