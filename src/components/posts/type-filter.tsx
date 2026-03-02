@@ -20,7 +20,6 @@ export function TypeFilter() {
     } else {
       params.delete("type");
     }
-    params.delete("q");
     router.push(`/?${params.toString()}`);
   };
 

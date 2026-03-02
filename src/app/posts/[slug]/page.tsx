@@ -38,7 +38,7 @@ export default async function PostPage({ params }: PostPageProps) {
         <BlurFade delay={0.1}>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 sm:mb-8"
           >
             <ArrowLeft size={16} />
             돌아가기
@@ -46,16 +46,16 @@ export default async function PostPage({ params }: PostPageProps) {
         </BlurFade>
 
         <BlurFade delay={0.2}>
-          <header className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
+          <header className="mb-6 sm:mb-8">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <Badge variant="secondary">
                 {post.type === "diary" ? "일기" : "노트"}
               </Badge>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs sm:text-sm text-muted-foreground">
                 {format(new Date(post.created_at), "yyyy년 M월 d일", { locale: ko })}
               </span>
             </div>
-            <h1 className="font-serif text-3xl md:text-4xl font-bold mb-4 leading-tight">
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
               {post.title}
             </h1>
             {post.tags.length > 0 && (

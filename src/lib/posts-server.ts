@@ -28,16 +28,3 @@ export async function getPostBySlugServer(slug: string) {
   if (error) throw error;
   return data as Post;
 }
-
-export async function searchPostsServer(query: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("is_public", true)
-    .or(`title.ilike.%${query}%,content.ilike.%${query}%`)
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return (data ?? []) as Post[];
-}
