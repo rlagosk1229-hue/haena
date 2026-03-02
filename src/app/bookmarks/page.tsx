@@ -24,6 +24,7 @@ export default function BookmarksPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("기타");
   const [newDesc, setNewDesc] = useState("");
+  const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
 
@@ -47,9 +48,18 @@ export default function BookmarksPage() {
   }, [loadBookmarks]);
 
   const addBookmark = async () => {
-    if (!newUrl.trim() || !newTitle.trim() || !userId) return;
+    if (!newUrl.trim() || !newTitle.trim() || !userId || saving) return;
+    setSaving(true);
     const fullUrl = newUrl.startsWith("http") ? newUrl : `https://${newUrl}`;
-    const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(fullUrl).hostname}&sz=32`;
+    let hostname = "";
+    try {
+      hostname = new URL(fullUrl).hostname;
+    } catch {
+      toast.error("올바른 URL을 입력해주세요");
+      setSaving(false);
+      return;
+    }
+    const faviconUrl = `https://www.google.com/s2/favicons?domain=${hostname}&sz=32`;
     const { error } = await supabase.from("bookmarks").insert({
       url: fullUrl,
       title: newTitle.trim(),
@@ -58,6 +68,7 @@ export default function BookmarksPage() {
       favicon_url: faviconUrl,
       user_id: userId,
     });
+    setSaving(false);
     if (error) {
       toast.error("추가 실패");
       return;
@@ -71,7 +82,12 @@ export default function BookmarksPage() {
   };
 
   const deleteBookmark = async (id: string) => {
-    await supabase.from("bookmarks").delete().eq("id", id);
+    if (!confirm("이 북마크를 삭제할까요?")) return;
+    const { error } = await supabase.from("bookmarks").delete().eq("id", id);
+    if (error) {
+      toast.error("삭제 실패");
+      return;
+    }
     loadBookmarks();
     toast.success("삭제됨");
   };
@@ -146,8 +162,8 @@ export default function BookmarksPage() {
                 </button>
               ))}
             </div>
-            <Button onClick={addBookmark} size="sm" className="w-full">
-              추가
+            <Button onClick={addBookmark} size="sm" className="w-full" disabled={saving}>
+              {saving ? "추가 중..." : "추가"}
             </Button>
           </motion.div>
         )}

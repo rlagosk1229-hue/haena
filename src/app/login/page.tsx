@@ -31,6 +31,7 @@ export default function LoginPage() {
     }
 
     toast.success("로그인 성공!");
+    setLoading(false);
     router.push("/");
     router.refresh();
   };

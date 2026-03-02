@@ -25,6 +25,7 @@ export default function CalendarPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newTime, setNewTime] = useState("");
   const [newMemo, setNewMemo] = useState("");
+  const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
 
@@ -73,7 +74,8 @@ export default function CalendarPage() {
   const selectedEvents = eventsForDate(selectedDate);
 
   const addEvent = async () => {
-    if (!newTitle.trim() || !userId) return;
+    if (!newTitle.trim() || !userId || saving) return;
+    setSaving(true);
     const { error } = await supabase.from("events").insert({
       title: newTitle.trim(),
       date: selectedDate,
@@ -81,6 +83,7 @@ export default function CalendarPage() {
       memo: newMemo,
       user_id: userId,
     });
+    setSaving(false);
     if (error) {
       toast.error("추가 실패");
       return;
@@ -94,7 +97,12 @@ export default function CalendarPage() {
   };
 
   const deleteEvent = async (id: string) => {
-    await supabase.from("events").delete().eq("id", id);
+    if (!confirm("이 일정을 삭제할까요?")) return;
+    const { error } = await supabase.from("events").delete().eq("id", id);
+    if (error) {
+      toast.error("삭제 실패");
+      return;
+    }
     loadEvents();
     toast.success("삭제됨");
   };
@@ -219,8 +227,8 @@ export default function CalendarPage() {
                   className="flex-1"
                 />
               </div>
-              <Button onClick={addEvent} size="sm" className="w-full">
-                추가
+              <Button onClick={addEvent} size="sm" className="w-full" disabled={saving}>
+                {saving ? "추가 중..." : "추가"}
               </Button>
             </motion.div>
           )}

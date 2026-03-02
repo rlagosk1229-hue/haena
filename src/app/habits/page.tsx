@@ -11,6 +11,10 @@ import type { Habit, HabitLog } from "@/types/database";
 
 const EMOJI_OPTIONS = ["✅", "💪", "📚", "🏃", "💧", "🧘", "✍️", "🎵", "💤", "🥗"];
 
+function getKSTDate() {
+  return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split("T")[0];
+}
+
 export default function HabitsPage() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [todayLogs, setTodayLogs] = useState<HabitLog[]>([]);
@@ -18,6 +22,8 @@ export default function HabitsPage() {
   const [newHabit, setNewHabit] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("✅");
   const [showAdd, setShowAdd] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [toggling, setToggling] = useState<Set<string>>(new Set());
   const [userId, setUserId] = useState<string | null>(null);
   const supabase = createClient();
 
@@ -27,7 +33,7 @@ export default function HabitsPage() {
     });
   }, [supabase]);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getKSTDate();
 
   const loadData = useCallback(async () => {
     const [habitsRes, logsRes] = await Promise.all([
@@ -37,9 +43,10 @@ export default function HabitsPage() {
     if (habitsRes.data) setHabits(habitsRes.data);
     if (logsRes.data) setTodayLogs(logsRes.data);
 
-    // Calculate streaks
+    // Calculate streaks (from yesterday backwards, so unchecked today doesn't break it)
     if (habitsRes.data) {
       const streakMap: Record<string, number> = {};
+      const checkedToday = new Set((logsRes.data ?? []).map((l) => l.habit_id));
       for (const habit of habitsRes.data) {
         const { data: logs } = await supabase
           .from("habit_logs")
@@ -50,15 +57,21 @@ export default function HabitsPage() {
         let streak = 0;
         if (logs) {
           const dates = logs.map((l) => l.date);
-          const d = new Date();
+          // Start from yesterday
+          const d = new Date(Date.now() + 9 * 60 * 60 * 1000);
+          d.setDate(d.getDate() - 1);
           for (let i = 0; i < 60; i++) {
             const dateStr = d.toISOString().split("T")[0];
             if (dates.includes(dateStr)) {
               streak++;
-            } else if (i > 0) {
+            } else {
               break;
             }
             d.setDate(d.getDate() - 1);
+          }
+          // Add today if checked
+          if (checkedToday.has(habit.id)) {
+            streak++;
           }
         }
         streakMap[habit.id] = streak;
@@ -72,10 +85,12 @@ export default function HabitsPage() {
   }, [loadData]);
 
   const addHabit = async () => {
-    if (!newHabit.trim() || !userId) return;
+    if (!newHabit.trim() || !userId || saving) return;
+    setSaving(true);
     const { error } = await supabase
       .from("habits")
       .insert({ name: newHabit.trim(), icon: selectedIcon, user_id: userId });
+    setSaving(false);
     if (error) {
       toast.error("추가 실패");
       return;
@@ -87,6 +102,8 @@ export default function HabitsPage() {
   };
 
   const toggleHabit = async (habitId: string) => {
+    if (toggling.has(habitId)) return;
+    setToggling((prev) => new Set(prev).add(habitId));
     const existing = todayLogs.find((l) => l.habit_id === habitId);
     if (existing) {
       await supabase.from("habit_logs").delete().eq("id", existing.id);
@@ -95,11 +112,21 @@ export default function HabitsPage() {
         .from("habit_logs")
         .insert({ habit_id: habitId, date: today, user_id: userId! });
     }
-    loadData();
+    await loadData();
+    setToggling((prev) => {
+      const s = new Set(prev);
+      s.delete(habitId);
+      return s;
+    });
   };
 
   const deleteHabit = async (habitId: string) => {
-    await supabase.from("habits").delete().eq("id", habitId);
+    if (!confirm("이 습관을 삭제할까요?")) return;
+    const { error } = await supabase.from("habits").delete().eq("id", habitId);
+    if (error) {
+      toast.error("삭제 실패");
+      return;
+    }
     loadData();
     toast.success("삭제됨");
   };
@@ -153,8 +180,8 @@ export default function HabitsPage() {
                 className="flex-1"
                 onKeyDown={(e) => e.key === "Enter" && addHabit()}
               />
-              <Button onClick={addHabit} size="sm">
-                추가
+              <Button onClick={addHabit} size="sm" disabled={saving}>
+                {saving ? "추가 중..." : "추가"}
               </Button>
             </div>
           </motion.div>
@@ -182,6 +209,7 @@ export default function HabitsPage() {
             >
               <button
                 onClick={() => toggleHabit(habit.id)}
+                disabled={toggling.has(habit.id)}
                 className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl transition-all ${
                   isChecked(habit.id)
                     ? "bg-primary/20 scale-95"

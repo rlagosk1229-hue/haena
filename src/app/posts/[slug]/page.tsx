@@ -24,6 +24,7 @@ export default async function PostPage({ params }: PostPageProps) {
   } catch {
     notFound();
   }
+  if (!post) notFound();
 
   const supabase = await createClient();
   const {
