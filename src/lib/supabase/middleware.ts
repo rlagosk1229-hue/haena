@@ -25,19 +25,23 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  const protectedPaths = ["/write", "/edit"];
-  const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
+    const protectedPaths = ["/write", "/edit"];
+    const isProtected = protectedPaths.some((path) =>
+      request.nextUrl.pathname.startsWith(path)
+    );
 
-  if (isProtected && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    if (isProtected && !user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+  } catch {
+    // Supabase 연결 실패 시에도 페이지는 보여줌
   }
 
   return supabaseResponse;

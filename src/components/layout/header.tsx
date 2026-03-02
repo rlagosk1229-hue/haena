@@ -5,10 +5,14 @@ import { HeaderAuth } from "./header-auth";
 import { LogoIcon } from "@/components/icons/logo-icon";
 
 export async function Header() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Supabase 연결 실패 시 비로그인 상태로 표시
+  }
 
   return (
     <header className="sticky top-0 z-50 glass shadow-sm">

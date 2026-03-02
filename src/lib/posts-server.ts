@@ -13,7 +13,7 @@ export async function getPostsServer(type?: PostType) {
   }
 
   const { data, error } = await query.order("created_at", { ascending: false });
-  if (error) throw error;
+  if (error) return [] as Post[];
   return (data ?? []) as Post[];
 }
 
