@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { createClient } from "@/lib/supabase/server";
 import { HeaderAuth } from "./header-auth";
+import { PushToggle } from "./push-toggle";
 import { LogoIcon } from "@/components/icons/logo-icon";
 
 export async function Header() {
@@ -27,6 +28,7 @@ export async function Header() {
           <span className="font-serif text-xl font-bold tracking-tight">해나</span>
         </Link>
         <div className="flex items-center gap-1">
+          {user && <PushToggle />}
           <ThemeToggle />
           <HeaderAuth user={user} />
         </div>

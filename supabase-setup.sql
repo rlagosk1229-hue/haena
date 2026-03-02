@@ -61,3 +61,18 @@ create policy "Users can manage own events" on events
 
 create policy "Users can manage own bookmarks" on bookmarks
   for all using (auth.uid() = user_id);
+
+-- 푸시 알림 구독
+create table push_subscriptions (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  endpoint text not null unique,
+  keys_p256dh text not null,
+  keys_auth text not null,
+  created_at timestamptz default now()
+);
+
+alter table push_subscriptions enable row level security;
+
+create policy "Users can manage own push_subscriptions" on push_subscriptions
+  for all using (auth.uid() = user_id);
