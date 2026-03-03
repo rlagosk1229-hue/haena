@@ -77,3 +77,24 @@ export interface Bookmark {
   favicon_url: string | null;
   created_at: string;
 }
+
+// 가계부
+export interface ExpenseCategory {
+  id: string;
+  user_id: string;
+  name: string;
+  emoji: string;
+  is_default: boolean;
+  created_at: string;
+}
+
+export interface Expense {
+  id: string;
+  user_id: string;
+  type: "income" | "expense";
+  amount: number;
+  category_id: string | null;
+  memo: string | null;
+  date: string;
+  created_at: string;
+}

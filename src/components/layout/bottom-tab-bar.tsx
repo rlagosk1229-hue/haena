@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Calendar, CheckCircle2, Bookmark } from "lucide-react";
+import { BookOpen, Calendar, CheckCircle2, Bookmark, Wallet } from "lucide-react";
 
 const tabs = [
   { href: "/", label: "홈", icon: BookOpen },
   { href: "/calendar", label: "달력", icon: Calendar },
   { href: "/habits", label: "습관", icon: CheckCircle2 },
+  { href: "/expenses", label: "가계부", icon: Wallet },
   { href: "/bookmarks", label: "북마크", icon: Bookmark },
 ] as const;
 
